@@ -132,40 +132,38 @@ public class ButtonPanel extends JPanel {
         return column;
     }
 
-    private JPanel createButtonCard(SuiteButton btn, Color catColor) {
-        JPanel card = new JPanel(new BorderLayout(6, 0));
-        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 36));
-        card.setAlignmentX(Component.LEFT_ALIGNMENT);
-        card.setBackground(CARD_BG);
-        card.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 4, 0, 0, catColor),
-                BorderFactory.createEmptyBorder(3, 6, 3, 6)));
-        card.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-
+    private AbstractButton createButtonCard(SuiteButton btn, Color catColor) {
         Icon icon = iconLoader.loadIcon(btn.getIconPath());
         if (icon == null) {
             icon = IconLoader.createFallbackIcon(btn.getLabel(), catColor, 22);
         }
-        card.add(new JLabel(icon), BorderLayout.WEST);
 
-        JLabel label = new JLabel(btn.getLabel());
-        label.setFont(label.getFont().deriveFont(Font.PLAIN, 11f));
-        card.add(label, BorderLayout.CENTER);
+        JButton card = new JButton(btn.getLabel(), icon);
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 36));
+        card.setAlignmentX(Component.LEFT_ALIGNMENT);
+        card.setBackground(CARD_BG);
+        card.setOpaque(true);
+        card.setContentAreaFilled(true);
+        card.setBorderPainted(true);
+        card.setFocusPainted(false);
+        card.setHorizontalAlignment(SwingConstants.LEFT);
+        card.setIconTextGap(6);
+        card.setFont(card.getFont().deriveFont(Font.PLAIN, 11f));
+        card.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 4, 0, 0, catColor),
+                BorderFactory.createEmptyBorder(3, 6, 3, 6)));
+        card.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         if (btn.getDescription() != null && !btn.getDescription().isEmpty()) {
             card.setToolTipText(btn.getDescription());
         }
 
         card.setComponentPopupMenu(buildContextMenu(btn));
+        card.addActionListener(e -> {
+            if (clickListener != null) clickListener.onButtonClicked(btn);
+        });
 
         card.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (!e.isPopupTrigger() && SwingUtilities.isLeftMouseButton(e) && clickListener != null) {
-                    clickListener.onButtonClicked(btn);
-                }
-            }
-
             @Override
             public void mouseEntered(MouseEvent e) {
                 card.setBackground(tint(catColor, 0.9f));
