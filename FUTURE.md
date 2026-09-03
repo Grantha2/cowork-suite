@@ -1,3 +1,5 @@
+> **Note (2026-09-02):** this roadmap predates the September 2 planning session. Where it conflicts with `docs/phases.md` or `DECISIONS.md`, those win. In particular, item 2 (multi-provider routing) is superseded: OpenRouter is the model layer. Kept for history and for the near-term items that still apply (1, 4, 5).
+
 # Cowork Suite — Future Directions
 
 Ideas for contributors. The suite already has a button board, seven
